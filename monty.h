@@ -10,6 +10,8 @@
 #include <unistd.h>
 #include <string.h>
 
+extern int data;
+
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -41,5 +43,12 @@ typedef struct instruction_s
 } instruction_t;
 
 void montyFile(char **argv);
+void montyInit(char *line, unsigned int line_number);
+
+/* Op Functions library */
+void pushStack(stack_t **stack, unsigned int line_number);
+void printStack(stack_t **stack, unsigned int line_number);
+
+void (*getOpcode(char *token))(stack_t **stack, unsigned int line_number);
 
 #endif
