@@ -50,6 +50,7 @@ void freeTokens(char ***tokens);
 
 void montyFile(char **argv);
 void montyTokens(char **buffer, char ***tokens, ssize_t read);
+void montyInit(stack_t **stack, char ***tokens, unsigned int line_number);
 
 /* Op Functions library */
 void pushStack(stack_t **stack, unsigned int line_number);

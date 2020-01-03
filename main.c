@@ -34,6 +34,8 @@ void montyFile(char **argv)
 	size_t len = 0;
 	ssize_t read;
 	unsigned int line_number = 1, i;
+    stack_t *stack = NULL;
+
 
 	fp = fopen(filename, "r");
 	if (fp == NULL)
@@ -45,17 +47,14 @@ void montyFile(char **argv)
 	while ((read = getline(&buffer, &len, fp)) != -1)
 	{
         /* printf("Buffer actual: %s\n", buffer); */
-        /* printf("NUMERO DE LINEA %u valor del read %u\n", line_number, (unsigned int)(read)); */
+        /* printf("Numero de linea %u valor del read %u\n", line_number, (unsigned int)(read)); */
 		montyTokens(&buffer, &tokens, read);
         /* printf("Buffer after montyTokens: %s\n", buffer); */
         if (tokens != NULL)
-        {
-            /* printf("TOKENS ES DIFERENTE DE NULL\n"); */
             for (i = 0; tokens[i] != NULL; i++)
-            {
                 printf("tokens %u: %s\n", i, tokens[i]);
-            }
-        }
+        if (tokens != NULL)
+            montyInit(&stack, &tokens, line_number);
         /* printf("tokens %u: **%s**\n", i, tokens[i]); */
         freeTokens(&tokens);
         line_number++;
@@ -65,6 +64,31 @@ void montyFile(char **argv)
 
 	if (buffer != NULL)
 		free(buffer);    
+}
+
+void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
+{
+    void (*op_func)(stack_t **stack, unsigned int line_number);
+    
+    unsigned int i;
+    
+    if (strcmp((*tokens)[0], "push") == 0)
+        {  
+            for (i = 0; (*tokens)[i] != NULL; i++)
+            {
+                if (i == 1)
+                {
+                    data = atoi((*tokens)[i]);
+                    /* printf("DATAAAA *****%d******\n",data); */
+                    break;
+                }
+            }
+        }
+        op_func = getOpcode((*tokens)[0]);
+        if (op_func != NULL)
+        {
+            op_func(stack, line_number);
+        }
 }
 
 void freeTokens(char ***tokens)
