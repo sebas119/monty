@@ -80,9 +80,14 @@ void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
                 {
                     data = atoi((*tokens)[i]);
                     /* printf("DATAAAA *****%d******\n",data); */
-                    break;
                 }
             }
+            if (i == 1)
+            {
+                fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
+                exit(EXIT_FAILURE);
+            }
+            /* printf("value of i: %u\n", i); */
         }
         op_func = getOpcode((*tokens)[0]);
         if (op_func != NULL)
