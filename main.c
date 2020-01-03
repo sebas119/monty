@@ -62,10 +62,12 @@ void montyFile(char **argv)
  */
 void montyInit(char *line, unsigned int line_number)
 {
-	void (*op_func)(stack_t * *stack, unsigned int line_number);
+	void (*op_func)(stack_t **stack, unsigned int line_number);
 	const char *s = " \t\n";
 	char *token;
-	stack_t *top = NULL;
+	stack_t *top;
+
+	top = NULL;
 
 	token = strtok(line, s);
 	while (token != NULL)
@@ -76,5 +78,7 @@ void montyInit(char *line, unsigned int line_number)
 			data = atoi(token);
 		if (op_func != NULL)
 			op_func(&top, line_number);
+
+		printf("MontyInit *top %p\n", (void *)top);
 	}
 }
