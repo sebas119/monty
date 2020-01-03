@@ -42,8 +42,14 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
+unsigned int lenTokens(ssize_t lenReaded, char **buffer);
+void replaceNewLine(char **buffer);
+void processTokens(char ***tokens, char **buffer, unsigned int countToken);
+
+void freeTokens(char ***tokens);
+
 void montyFile(char **argv);
-void montyInit(char *line, unsigned int line_number);
+void montyTokens(char **buffer, char ***tokens, ssize_t read);
 
 /* Op Functions library */
 void pushStack(stack_t **stack, unsigned int line_number);

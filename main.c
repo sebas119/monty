@@ -30,10 +30,10 @@ void montyFile(char **argv)
 {
 	const char *filename = argv[1];
 	FILE *fp;
-	char *line = NULL;
+	char *buffer = NULL, **tokens = NULL;
 	size_t len = 0;
 	ssize_t read;
-	unsigned int line_number = 1;
+	unsigned int line_number = 1, i;
 
 	fp = fopen(filename, "r");
 	if (fp == NULL)
@@ -42,43 +42,146 @@ void montyFile(char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	while ((read = getline(&line, &len, fp)) != -1)
+	while ((read = getline(&buffer, &len, fp)) != -1)
 	{
-		montyInit(line, line_number);
-		line_number++;
+        /* printf("Buffer actual: %s\n", buffer); */
+        /* printf("NUMERO DE LINEA %u valor del read %u\n", line_number, (unsigned int)(read)); */
+		montyTokens(&buffer, &tokens, read);
+        /* printf("Buffer after montyTokens: %s\n", buffer); */
+        if (tokens != NULL)
+        {
+            /* printf("TOKENS ES DIFERENTE DE NULL\n"); */
+            for (i = 0; tokens[i] != NULL; i++)
+            {
+                printf("tokens %u: %s\n", i, tokens[i]);
+            }
+        }
+        /* printf("tokens %u: **%s**\n", i, tokens[i]); */
+        freeTokens(&tokens);
+        line_number++;
 	}
 
 	fclose(fp);
 
-	if (line != NULL)
-		free(line);
+	if (buffer != NULL)
+		free(buffer);    
+}
+
+void freeTokens(char ***tokens)
+{
+    if (*tokens != NULL)
+    {
+        free(*tokens);
+        *tokens = NULL;
+    }
 }
 
 /**
- * montyInit -
+ * montyTokens -
  * @argc:
  * @argv:
  * Return:
  */
-void montyInit(char *line, unsigned int line_number)
+void montyTokens(char **buffer, char ***tokens, ssize_t read)
 {
-	void (*op_func)(stack_t **stack, unsigned int line_number);
-	const char *s = " \t\n";
-	char *token;
-	stack_t *top;
+    unsigned int countToken, i;
 
-	top = NULL;
-
-	token = strtok(line, s);
-	while (token != NULL)
+    /* printf("ENTRO EN MONTYTOKENS\n"); */
+    if (read > 0)
 	{
-		op_func = getOpcode(token);
-		token = strtok(NULL, s);
-		if (token != NULL)
-			data = atoi(token);
-		if (op_func != NULL)
-			op_func(&top, line_number);
-
-		printf("MontyInit *top %p\n", (void *)top);
+		i = 0;
+		while ((*buffer)[i] == ' ' || (*buffer)[i] == '\t')
+		{
+			if ((*buffer)[i + 1] == '\n')
+				return;
+			i++;
+		}
 	}
+
+    if (**buffer != '\n')
+    {
+        /* printf("ENTRO EN BUFFER\n"); */
+        replaceNewLine(buffer);
+        countToken = lenTokens(read, buffer);
+        /* printf("countToken %u\n", countToken); */
+        if (countToken > 3)
+            countToken = 3;
+        processTokens(tokens, buffer, countToken);
+    }
+    /* printf("SALIO DE MONTYTOKENS\n"); */
+}
+
+/**
+ * lenTokens - Get the number of words separated by a delimiter
+ * @lenReaded: n
+ * @buffer: n
+ * Return: (unsigned int) of words in the buffer
+ */
+unsigned int lenTokens(ssize_t lenReaded, char **buffer)
+{
+    char *tempToken = NULL, *copyBuffer = NULL;
+	int i;
+	char *delim = " \n\t";
+
+	copyBuffer = malloc(sizeof(char) * lenReaded);
+	strcpy(copyBuffer, *buffer);
+	tempToken = strtok(copyBuffer, delim);
+	for (i = 0; tempToken != NULL; i++)
+		tempToken = strtok(NULL, delim);
+	i++; /* One more to save NULL */
+	free(copyBuffer);
+	return (i);
+}
+
+
+/**
+ * replaceNewLine - Replace the new line in the buffer
+ * by a null character
+ * @buffer: n
+ * Return: nothing
+ */
+void replaceNewLine(char **buffer)
+{
+	int i;
+
+	for (i = 0; (*buffer)[i] != '\0'; i++)
+		continue;
+	(*buffer)[i - 1] = '\0';  /* Replace '\n' by '\0' */
+
+}
+
+
+/**
+ * processTokens - Get all of the strings separated by a delimiter in
+ * an array of strings
+ * @tokens: n
+ * @buffer: n
+ * @countToken: n
+ *
+ * Return: nothing
+ */
+void processTokens(char ***tokens, char **buffer, unsigned int countToken)
+{
+	char *token = NULL;
+	unsigned int i;
+	char *delim = " \n\t";
+    /* char *opcodes[] = {"push", "pall", NULL}; */
+
+
+    /* printf("countToken en processTokens %u\n", countToken); */
+	token = strtok(*buffer, delim);
+
+    if (strcmp(token, "push") == 0)
+        countToken = 3;
+    else
+        countToken = 2;
+    *tokens = malloc(sizeof(char *) * countToken);
+	for (i = 0; token != NULL && i <= countToken - 2; i++)
+	{
+        /* printf("VALOR DE I, %d\n", i); */
+		(*tokens)[i] = token;
+		token = strtok(NULL, delim);
+	}
+	/* (*tokens)[i] = token; */
+    (*tokens)[i] = NULL;
 }
