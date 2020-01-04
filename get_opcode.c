@@ -21,6 +21,7 @@ void (*getOpcode(char *token))(stack_t **stack, unsigned int line_number)
 		{"mod", modStack},
 		{"pchar", pcharStack},
 		{"pstr", pstrStack},
+		{"rotl", rotlStack},
 		{NULL, NULL}};
 
 	for (i = 0; opcodes[i].opcode != NULL; i++)
