@@ -38,16 +38,15 @@ void pstrStack(stack_t **stack, unsigned int line_number)
 
 	(void) line_number;
 	if (*stack == NULL)
-	{
-		fprintf(stderr, "L%u: can't pstr, stack empty\n", line_number);
-		exit(EXIT_FAILURE);		
-	}
+		return;
+
 	temp = *stack;
 	while (temp != NULL)
 	{
-		if (temp->n < 0 || temp->n > 127 || temp->n == 0)
+		if (temp->n > 0 && temp->n < 128)
+			printf("%c", temp->n);
+		else
 			break;
-		printf("%c", temp->n);
 		temp = temp->next;
 	}
 	printf("\n");
