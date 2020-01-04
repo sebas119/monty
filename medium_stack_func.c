@@ -60,8 +60,9 @@ void rotlStack(stack_t **stack, unsigned int line_number)
 	stack_t *top = *stack, *temp = *stack;
 
 	(void) line_number;
-	if (*stack == NULL)
+	if (*stack == NULL || (*stack)->next == NULL)
 		return;
+
 	if (temp->next != NULL)
 		temp->next->prev = NULL;
 
