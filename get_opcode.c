@@ -1,9 +1,8 @@
 #include "monty.h"
 
 /**
- * *getOpcode -
- * @token: 
- *
+ * *getOpcode - a
+ * @token: a
  * Return: Function pointer
  */
 void (*getOpcode(char *token))(stack_t **stack, unsigned int line_number)

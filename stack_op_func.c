@@ -2,6 +2,13 @@
 
 int data;
 
+/**
+ * pushStack - Free the stack
+ * @stack: Head of the list
+ * @line_number: Head of the list
+ *
+ * Return: nothing
+ */
 void pushStack(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new = malloc(sizeof(stack_t));
@@ -14,21 +21,22 @@ void pushStack(stack_t **stack, unsigned int line_number)
 	new->prev = NULL;
 	new->next = NULL;
 
-	/* printf("VALUES OF *stack %p\n", (void *)*stack); */
-
 	if (*stack != NULL)
 	{
 		new->next = *stack;
 		(*stack)->prev = new;
-		/* printf("ENTRO AQUI\n"); */
 	}
 
 	*stack = new;
-	/* printf("AFTER POINTER MEMORY *stack %p\n", (void *)*stack);
-	printf("PUSH STACK FUNCTION\n");
-	printf("-- %d --\n", data); */
 }
 
+/**
+ * printStack - Free the stack
+ * @stack: Head of the list
+ * @line_number: Head of the list
+ *
+ * Return: nothing
+ */
 void printStack(stack_t **stack, unsigned int line_number)
 {
 	stack_t *temp = *stack;
@@ -36,8 +44,6 @@ void printStack(stack_t **stack, unsigned int line_number)
 	if (*stack == NULL)
 		return;
 	(void)line_number;
-	/* printf("PALL FUNCTION\n");
-	printf("%d\n", (*stack)->n); */
 	while (temp != NULL)
 	{
 		printf("%d\n", temp->n);

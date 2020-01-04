@@ -45,7 +45,6 @@ typedef struct instruction_s
 unsigned int lenTokens(ssize_t lenReaded, char **buffer);
 void replaceNewLine(char **buffer);
 void processTokens(char ***tokens, char **buffer, unsigned int countToken);
-
 void freeTokens(char ***tokens);
 
 void montyFile(char **argv);
@@ -56,6 +55,11 @@ void montyInit(stack_t **stack, char ***tokens, unsigned int line_number);
 void pushStack(stack_t **stack, unsigned int line_number);
 void printStack(stack_t **stack, unsigned int line_number);
 
+void freeStack(stack_t *stack);
+
 void (*getOpcode(char *token))(stack_t **stack, unsigned int line_number);
+
+int isCharDigit(int c);
+void isNumber(char *pushData, unsigned int line_number);
 
 #endif

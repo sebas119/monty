@@ -1,10 +1,10 @@
 #include "monty.h"
 
 /**
- * main -
- * @argc:
- * @argv:
- * Return:
+ * main - a
+ * @argc: a
+ * @argv: a
+ * Return: a
  */
 int main(int argc, char **argv)
 {
@@ -21,10 +21,9 @@ int main(int argc, char **argv)
 }
 
 /**
- * montyFile -
- * @argc:
- * @argv:
- * Return:
+ * montyFile - a
+ * @argv: a
+ * Return: a
  */
 void montyFile(char **argv)
 {
@@ -33,9 +32,8 @@ void montyFile(char **argv)
 	char *buffer = NULL, **tokens = NULL;
 	size_t len = 0;
 	ssize_t read;
-	unsigned int line_number = 1, i;
-    stack_t *stack = NULL;
-
+	unsigned int line_number = 1;
+	stack_t *stack = NULL;
 
 	fp = fopen(filename, "r");
 	if (fp == NULL)
@@ -46,77 +44,124 @@ void montyFile(char **argv)
 
 	while ((read = getline(&buffer, &len, fp)) != -1)
 	{
-        /* printf("Buffer actual: %s\n", buffer); */
-        /* printf("Numero de linea %u valor del read %u\n", line_number, (unsigned int)(read)); */
+		/* printf("Buffer actual: %s\n", buffer); */
 		montyTokens(&buffer, &tokens, read);
-        /* printf("Buffer after montyTokens: %s\n", buffer); */
-        if (tokens != NULL)
-            for (i = 0; tokens[i] != NULL; i++)
-                printf("tokens %u: %s\n", i, tokens[i]);
-        if (tokens != NULL)
-            montyInit(&stack, &tokens, line_number);
-        /* printf("tokens %u: **%s**\n", i, tokens[i]); */
-        freeTokens(&tokens);
-        line_number++;
+		/* printf("Buffer after montyTokens: %s\n", buffer); */
+		if (tokens != NULL)
+			montyInit(&stack, &tokens, line_number);
+		/* printf("tokens %u: **%s**\n", i, tokens[i]); */
+		freeTokens(&tokens);
+		line_number++;
 	}
 
 	fclose(fp);
 
 	if (buffer != NULL)
-		free(buffer);    
-}
-
-void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
-{
-    void (*op_func)(stack_t **stack, unsigned int line_number);
-    
-    unsigned int i;
-    
-    if (strcmp((*tokens)[0], "push") == 0)
-        {  
-            for (i = 0; (*tokens)[i] != NULL; i++)
-            {
-                if (i == 1)
-                {
-                    data = atoi((*tokens)[i]);
-                    /* printf("DATAAAA *****%d******\n",data); */
-                }
-            }
-            if (i == 1)
-            {
-                fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
-                exit(EXIT_FAILURE);
-            }
-            /* printf("value of i: %u\n", i); */
-        }
-        op_func = getOpcode((*tokens)[0]);
-        if (op_func != NULL)
-        {
-            op_func(stack, line_number);
-        }
-}
-
-void freeTokens(char ***tokens)
-{
-    if (*tokens != NULL)
-    {
-        free(*tokens);
-        *tokens = NULL;
-    }
+		free(buffer);
+	freeStack(stack);
 }
 
 /**
- * montyTokens -
- * @argc:
- * @argv:
+ * montyInit - a
+ * @stack: a
+ * @tokens: a
+ * @line_number: a
+ * Return: a
+ */
+void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
+{
+	void (*op_func)(stack_t **stack, unsigned int line_number);
+
+	unsigned int i;
+
+	if (strcmp((*tokens)[0], "push") == 0)
+	{
+		for (i = 0; (*tokens)[i] != NULL; i++)
+		{
+			if (i == 1)
+			{
+				isNumber((*tokens)[i], line_number);
+				/* data = atoi((*tokens)[i]); */
+				/* printf("DATAAAA *****%d******\n",data); */
+			}
+		}
+		if (i == 1 && (*tokens)[i] == NULL)
+		{
+			fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
+			exit(EXIT_FAILURE);
+		}
+		/* printf("value of i: %u\n", i); */
+	}
+	op_func = getOpcode((*tokens)[0]);
+	if (op_func != NULL)
+	{
+		op_func(stack, line_number);
+	}
+}
+
+/**
+ * isCharDigit - a
+ * @c: a
+ * Return: a
+ */
+int isCharDigit(int c)
+{
+	if ((c >= '0' && c <= '9') || (c == '-'))
+		return (1);
+	return (0);
+}
+
+/**
+ * isNumber - a
+ * @pushData: a
+ * @line_number: a
+ * Return: a
+ */
+void isNumber(char *pushData, unsigned int line_number)
+{
+	unsigned int i = 0;
+
+	while (pushData[i] != '\0')
+	{
+		if (i == 0 && pushData[i] == '-')
+			;
+		else if (isCharDigit(pushData[i]) == 0)
+		{
+			fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
+			exit(EXIT_FAILURE);
+		}
+		i++;
+	}
+	data = atoi(pushData);
+}
+
+/**
+ * freeTokens - a
+ * @tokens: a
+ * Return: a
+ */
+void freeTokens(char ***tokens)
+{
+	if (*tokens != NULL)
+	{
+		free(*tokens);
+		*tokens = NULL;
+	}
+}
+
+/**
+ * montyTokens - a
+ * @buffer: a
+ * @tokens: a
+ * @read: a
  * Return:
  */
 void montyTokens(char **buffer, char ***tokens, ssize_t read)
 {
-    unsigned int countToken, i;
+	unsigned int countToken, i;
 
-    /* printf("ENTRO EN MONTYTOKENS\n"); */
-    if (read > 0)
+	/* printf("ENTRO EN MONTYTOKENS\n"); */
+	if (read > 0)
 	{
 		i = 0;
 		while ((*buffer)[i] == ' ' || (*buffer)[i] == '\t')
@@ -127,17 +172,17 @@ void montyTokens(char **buffer, char ***tokens, ssize_t read)
 		}
 	}
 
-    if (**buffer != '\n')
-    {
-        /* printf("ENTRO EN BUFFER\n"); */
-        replaceNewLine(buffer);
-        countToken = lenTokens(read, buffer);
-        /* printf("countToken %u\n", countToken); */
-        if (countToken > 3)
-            countToken = 3;
-        processTokens(tokens, buffer, countToken);
-    }
-    /* printf("SALIO DE MONTYTOKENS\n"); */
+	if (**buffer != '\n')
+	{
+		/* printf("ENTRO EN BUFFER\n"); */
+		replaceNewLine(buffer);
+		countToken = lenTokens(read, buffer);
+		/* printf("countToken %u\n", countToken); */
+		if (countToken > 3)
+			countToken = 3;
+		processTokens(tokens, buffer, countToken);
+	}
+	/* printf("SALIO DE MONTYTOKENS\n"); */
 }
 
 /**
@@ -148,7 +193,7 @@ void montyTokens(char **buffer, char ***tokens, ssize_t read)
  */
 unsigned int lenTokens(ssize_t lenReaded, char **buffer)
 {
-    char *tempToken = NULL, *copyBuffer = NULL;
+	char *tempToken = NULL, *copyBuffer = NULL;
 	int i;
 	char *delim = " \n\t";
 
@@ -162,7 +207,6 @@ unsigned int lenTokens(ssize_t lenReaded, char **buffer)
 	return (i);
 }
 
-
 /**
  * replaceNewLine - Replace the new line in the buffer
  * by a null character
@@ -175,10 +219,8 @@ void replaceNewLine(char **buffer)
 
 	for (i = 0; (*buffer)[i] != '\0'; i++)
 		continue;
-	(*buffer)[i - 1] = '\0';  /* Replace '\n' by '\0' */
-
+	(*buffer)[i - 1] = '\0'; /* Replace '\n' by '\0' */
 }
-
 
 /**
  * processTokens - Get all of the strings separated by a delimiter in
@@ -194,23 +236,44 @@ void processTokens(char ***tokens, char **buffer, unsigned int countToken)
 	char *token = NULL;
 	unsigned int i;
 	char *delim = " \n\t";
-    /* char *opcodes[] = {"push", "pall", NULL}; */
+	/* char *opcodes[] = {"push", "pall", NULL}; */
 
-
-    /* printf("countToken en processTokens %u\n", countToken); */
+	/* printf("countToken en processTokens %u\n", countToken); */
 	token = strtok(*buffer, delim);
 
-    if (strcmp(token, "push") == 0)
-        countToken = 3;
-    else
-        countToken = 2;
-    *tokens = malloc(sizeof(char *) * countToken);
+	if (strcmp(token, "push") == 0)
+		countToken = 3;
+	else
+		countToken = 2;
+	*tokens = malloc(sizeof(char *) * countToken);
 	for (i = 0; token != NULL && i <= countToken - 2; i++)
 	{
-        /* printf("VALOR DE I, %d\n", i); */
+		/* printf("VALOR DE I, %d\n", i); */
 		(*tokens)[i] = token;
 		token = strtok(NULL, delim);
 	}
 	/* (*tokens)[i] = token; */
-    (*tokens)[i] = NULL;
+	(*tokens)[i] = NULL;
+}
+
+
+/**
+ * freeStack - Free the stack
+ * @stack: Head of the list
+ *
+ * Return: nothing
+ */
+void freeStack(stack_t *stack)
+{
+	stack_t *temp;
+
+	if (stack == NULL)
+		return;
+
+	while (stack != NULL)
+	{
+		temp = stack;
+		stack = temp->next;
+		free(temp);
+	}
 }
