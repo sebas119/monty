@@ -63,6 +63,7 @@ void subStack(stack_t **stack, unsigned int line_number);
 void divStack(stack_t **stack, unsigned int line_number);
 void mulStack(stack_t **stack, unsigned int line_number);
 void modStack(stack_t **stack, unsigned int line_number);
+void pcharStack(stack_t **stack, unsigned int line_number);
 
 
 void (*getOpcode(char *token))(stack_t **stack, unsigned int line_number);
