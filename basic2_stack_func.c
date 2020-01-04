@@ -1,7 +1,5 @@
 #include "monty.h"
 
-int data;
-
 /**
  * addStack - Free the stack
  * @stack: Head of the list
