@@ -14,7 +14,7 @@ void (*getOpcode(char *token))(stack_t **stack, unsigned int line_number)
 		{"pint", topStack},
 		{"pop", popStack},
 		{"swap", swapStack},
-		/* {"add", addStack}, */
+		{"add", addStack},
 		{"nop", NULL},
 		{NULL, NULL}};
 
