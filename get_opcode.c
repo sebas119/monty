@@ -13,6 +13,9 @@ void (*getOpcode(char *token))(stack_t **stack, unsigned int line_number)
 		{"pall", printStack},
 		{"pint", topStack},
 		{"pop", popStack},
+		{"swap", swapStack},
+		/* {"add", addStack}, */
+		{"nop", NULL},
 		{NULL, NULL}};
 
 	for (i = 0; opcodes[i].opcode != NULL; i++)
