@@ -74,7 +74,7 @@ void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
 
 	unsigned int i;
 
-	if ((strcmp((*tokens)[0], "nop") == 0))
+	if ((strcmp((*tokens)[0], "nop") == 0) || (*((*tokens)[0]) == '#'))
 		return;
 
 	if (strcmp((*tokens)[0], "push") == 0)
