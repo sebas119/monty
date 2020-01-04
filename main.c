@@ -38,7 +38,7 @@ void montyFile(char **argv)
 	fp = fopen(filename, "r");
 	if (fp == NULL)
 	{
-		fprintf(stderr, "Error: Can't open file <%s>\n", filename);
+		fprintf(stderr, "Error: Can't open file %s\n", filename);
 		exit(EXIT_FAILURE);
 	}
 
@@ -87,16 +87,21 @@ void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
 		}
 		if (i == 1 && (*tokens)[i] == NULL)
 		{
-			fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
+			fprintf(stderr, "L%u: usage: push integer\n", line_number);
 			exit(EXIT_FAILURE);
 		}
 		/* printf("value of i: %u\n", i); */
 	}
 	op_func = getOpcode((*tokens)[0]);
+
 	if (op_func != NULL)
-	{
 		op_func(stack, line_number);
+	else
+	{
+		fprintf(stderr, "L%u: unknown instruction %s\n", line_number, (*tokens)[0]);
+		exit(EXIT_FAILURE);
 	}
+
 }
 
 /**
@@ -127,7 +132,7 @@ void isNumber(char *pushData, unsigned int line_number)
 			;
 		else if (isCharDigit(pushData[i]) == 0)
 		{
-			fprintf(stderr, "L<%u>: usage: push integer\n", line_number);
+			fprintf(stderr, "L%u: usage: push integer\n", line_number);
 			exit(EXIT_FAILURE);
 		}
 		i++;
