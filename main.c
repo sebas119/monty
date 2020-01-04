@@ -74,6 +74,9 @@ void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
 
 	unsigned int i;
 
+	if ((strcmp((*tokens)[0], "nop") == 0))
+		return;
+
 	if (strcmp((*tokens)[0], "push") == 0)
 	{
 		for (i = 0; (*tokens)[i] != NULL; i++)
