@@ -51,6 +51,7 @@ void montyFile(char **argv);
 void montyTokens(char **buffer, char ***tokens, ssize_t read);
 void montyInit(stack_t **stack, char ***tokens, unsigned int line_number);
 
+void freeStack(stack_t *stack);
 /* Op Functions library */
 void pushStack(stack_t **stack, unsigned int line_number);
 void printStack(stack_t **stack, unsigned int line_number);
@@ -61,7 +62,8 @@ void addStack(stack_t **stack, unsigned int line_number);
 void subStack(stack_t **stack, unsigned int line_number);
 void divStack(stack_t **stack, unsigned int line_number);
 void mulStack(stack_t **stack, unsigned int line_number);
-void freeStack(stack_t *stack);
+void modStack(stack_t **stack, unsigned int line_number);
+
 
 void (*getOpcode(char *token))(stack_t **stack, unsigned int line_number);
 
