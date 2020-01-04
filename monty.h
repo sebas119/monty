@@ -54,6 +54,7 @@ void montyInit(stack_t **stack, char ***tokens, unsigned int line_number);
 /* Op Functions library */
 void pushStack(stack_t **stack, unsigned int line_number);
 void printStack(stack_t **stack, unsigned int line_number);
+void topStack(stack_t **stack, unsigned int line_number);
 
 void freeStack(stack_t *stack);
 
