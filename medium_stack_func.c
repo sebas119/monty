@@ -34,13 +34,9 @@ void pcharStack(stack_t **stack, unsigned int line_number)
  */
 void pstrStack(stack_t **stack, unsigned int line_number)
 {
-	stack_t *temp;
+	stack_t *temp = *stack;
 
 	(void) line_number;
-	if (*stack == NULL)
-		return;
-
-	temp = *stack;
 	while (temp != NULL)
 	{
 		if (temp->n > 0 && temp->n < 128)
