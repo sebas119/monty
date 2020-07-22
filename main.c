@@ -1,10 +1,10 @@
 #include "monty.h"
 
 /**
- * main - a
- * @argc: a
- * @argv: a
- * Return: a
+ * main - Main function that loads a monty file
+ * @argc: Number of arguments - Pointer to integer
+ * @argv: Array of arguments
+ * Return: 0 on success or 1 on failure
  */
 int main(int argc, char **argv)
 {
@@ -21,9 +21,9 @@ int main(int argc, char **argv)
 }
 
 /**
- * montyFile - a
- * @argv: a
- * Return: a
+ * montyFile - Init the the tokenization of the data in monty file
+ * @argv: Array of arguments
+ * Return: nothing
  */
 void montyFile(char **argv)
 {
@@ -44,12 +44,9 @@ void montyFile(char **argv)
 
 	while ((read = getline(&buffer, &len, fp)) != -1)
 	{
-		/* printf("Buffer actual: %s\n", buffer); */
 		montyTokens(&buffer, &tokens, read);
-		/* printf("Buffer after montyTokens: %s\n", buffer); */
 		if (tokens != NULL)
 			montyInit(&stack, &tokens, line_number);
-		/* printf("tokens %u: **%s**\n", i, tokens[i]); */
 		freeTokens(&tokens);
 		line_number++;
 	}
@@ -62,10 +59,10 @@ void montyFile(char **argv)
 }
 
 /**
- * montyInit - a
- * @stack: a
- * @tokens: a
- * @line_number: a
+ * montyInit - Loads the data in the stack
+ * @stack: Stack data structure
+ * @tokens: Array of arrays with tokens
+ * @line_number: Line number in the file - Integer
  * Return: a
  */
 void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
@@ -84,8 +81,6 @@ void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
 			if (i == 1)
 			{
 				isNumber((*tokens)[i], line_number);
-				/* data = atoi((*tokens)[i]); */
-				/* printf("DATAAAA *****%d******\n",data); */
 			}
 		}
 		if (i == 1 && (*tokens)[i] == NULL)
@@ -93,7 +88,6 @@ void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
 			fprintf(stderr, "L%u: usage: push integer\n", line_number);
 			exit(EXIT_FAILURE);
 		}
-		/* printf("value of i: %u\n", i); */
 	}
 	op_func = getOpcode((*tokens)[0]);
 
@@ -108,9 +102,9 @@ void montyInit(stack_t **stack, char ***tokens, unsigned int line_number)
 }
 
 /**
- * isCharDigit - a
- * @c: a
- * Return: a
+ * isCharDigit - Check if the Char is a digit
+ * @c: Character to check - char
+ * Return: 1 if it's a digit or 0 if not
  */
 int isCharDigit(int c)
 {
@@ -120,10 +114,10 @@ int isCharDigit(int c)
 }
 
 /**
- * isNumber - a
- * @pushData: a
- * @line_number: a
- * Return: a
+ * isNumber - Check if the check is a number
+ * @pushData: Character to check - char
+ * @line_number: Line number - unsigned int
+ * Return: nothing
  */
 void isNumber(char *pushData, unsigned int line_number)
 {
@@ -144,9 +138,9 @@ void isNumber(char *pushData, unsigned int line_number)
 }
 
 /**
- * freeTokens - a
- * @tokens: a
- * Return: a
+ * freeTokens - Free memory of Tokens Linked List
+ * @tokens: Pointer to a Linked list
+ * Return: nothing
  */
 void freeTokens(char ***tokens)
 {
@@ -158,17 +152,16 @@ void freeTokens(char ***tokens)
 }
 
 /**
- * montyTokens - a
- * @buffer: a
- * @tokens: a
- * @read: a
- * Return:
+ * montyTokens - Read the buffer and get clean tokens
+ * @buffer: Array of strings
+ * @tokens: Pointer to array of strings
+ * @read: Number of elements readed - ssize_t
+ * Return: nothing
  */
 void montyTokens(char **buffer, char ***tokens, ssize_t read)
 {
 	unsigned int countToken, i;
 
-	/* printf("ENTRO EN MONTYTOKENS\n"); */
 	if (read > 0)
 	{
 		i = 0;
@@ -182,21 +175,18 @@ void montyTokens(char **buffer, char ***tokens, ssize_t read)
 
 	if (**buffer != '\n')
 	{
-		/* printf("ENTRO EN BUFFER\n"); */
 		replaceNewLine(buffer);
 		countToken = lenTokens(read, buffer);
-		/* printf("countToken %u\n", countToken); */
 		if (countToken > 3)
 			countToken = 3;
 		processTokens(tokens, buffer, countToken);
 	}
-	/* printf("SALIO DE MONTYTOKENS\n"); */
 }
 
 /**
  * lenTokens - Get the number of words separated by a delimiter
- * @lenReaded: n
- * @buffer: n
+ * @lenReaded: Len of the line readed
+ * @buffer: Array of strings
  * Return: (unsigned int) of words in the buffer
  */
 unsigned int lenTokens(ssize_t lenReaded, char **buffer)
@@ -218,7 +208,7 @@ unsigned int lenTokens(ssize_t lenReaded, char **buffer)
 /**
  * replaceNewLine - Replace the new line in the buffer
  * by a null character
- * @buffer: n
+ * @buffer: Array of strings
  * Return: nothing
  */
 void replaceNewLine(char **buffer)
@@ -233,9 +223,9 @@ void replaceNewLine(char **buffer)
 /**
  * processTokens - Get all of the strings separated by a delimiter in
  * an array of strings
- * @tokens: n
- * @buffer: n
- * @countToken: n
+ * @tokens: Pointer to array of strings
+ * @buffer: Array of strings
+ * @countToken: number of tokens in the tokens variable
  *
  * Return: nothing
  */
@@ -244,9 +234,7 @@ void processTokens(char ***tokens, char **buffer, unsigned int countToken)
 	char *token = NULL;
 	unsigned int i;
 	char *delim = " \n\t";
-	/* char *opcodes[] = {"push", "pall", NULL}; */
 
-	/* printf("countToken en processTokens %u\n", countToken); */
 	token = strtok(*buffer, delim);
 
 	if (strcmp(token, "push") == 0)
@@ -256,11 +244,9 @@ void processTokens(char ***tokens, char **buffer, unsigned int countToken)
 	*tokens = malloc(sizeof(char *) * countToken);
 	for (i = 0; token != NULL && i <= countToken - 2; i++)
 	{
-		/* printf("VALOR DE I, %d\n", i); */
 		(*tokens)[i] = token;
 		token = strtok(NULL, delim);
 	}
-	/* (*tokens)[i] = token; */
 	(*tokens)[i] = NULL;
 }
 
